@@ -1,5 +1,7 @@
-Si vous n'avez pas `direnv`
 ```bash
+# Si vous avez direnv
+direnv allow
+# Sinon
 source .envrc
 ```
 
