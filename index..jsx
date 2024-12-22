@@ -1,7 +1,6 @@
 import React from 'react';
 
 const PokemonBattleScreen = () => {
-  // Sample battle data - in a real app this would be passed as props
   const battleState = {
     opponent: {
       name: "SALAMÈCHE",
@@ -21,10 +20,8 @@ const PokemonBattleScreen = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4">
-      {/* Battle arena background */}
       <div className="relative h-96 bg-gradient-to-b from-sky-200 to-green-200 rounded-lg p-4">
         
-        {/* Opponent's Pokemon section */}
         <div className="absolute top-4 right-4 w-64">
           <div className="bg-white rounded-lg p-2 mb-2">
             <div className="flex justify-between items-center">
@@ -36,7 +33,6 @@ const PokemonBattleScreen = () => {
                 <p className="text-sm">
                   {battleState.opponent.currentHP}/{battleState.opponent.maxHP} PV
                 </p>
-                {/* HP Bar */}
                 <div className="w-32 h-2 bg-gray-200 rounded-full">
                   <div 
                     className="h-full bg-green-500 rounded-full"
@@ -55,7 +51,6 @@ const PokemonBattleScreen = () => {
           />
         </div>
 
-        {/* Player's Pokemon section */}
         <div className="absolute bottom-4 left-4 w-64">
           <img 
             src={battleState.player.sprite} 
@@ -72,7 +67,6 @@ const PokemonBattleScreen = () => {
                 <p className="text-sm">
                   {battleState.player.currentHP}/{battleState.player.maxHP} PV
                 </p>
-                {/* HP Bar */}
                 <div className="w-32 h-2 bg-gray-200 rounded-full">
                   <div 
                     className="h-full bg-green-500 rounded-full"
@@ -86,7 +80,6 @@ const PokemonBattleScreen = () => {
           </div>
         </div>
 
-        {/* Battle menu */}
         <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg p-4">
           <div className="grid grid-cols-2 gap-4">
             <button className="bg-gray-100 hover:bg-gray-200 p-2 rounded text-left">
