@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .user-info {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+        .teams {
+            margin-top: 20px;
+        }
+        .team-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bienvenue, {{ user.username }} !</h1>
+
+        <!-- Affichage des informations de l'utilisateur -->
+        <div class="user-info">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
+        </div>
+
+        <!-- Affichage des équipes de Pokémon -->
+        <div class="teams">
+            <h2>Vos équipes de Pokémon</h2>
+            {% if user.teams %}
+                {% for team in user.teams %}
+                    <div class="team-card">
+                        <h3>{{ team.name }}</h3>
+                        <p><strong>Nombre de Pokémon:</strong> {{ team.pokemons|length }}</p>
+                        <a href="{{ url_for('view_team', team_id=team.id) }}">Voir les détails de l'équipe</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Vous n'avez pas encore d'équipes de Pokémon.</p>
+            {% endif %}
+        </div>
+
+        <!-- Formulaire de déconnexion -->
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="btn-logout">Se déconnecter</button>
+        </form>
+
+    </div>
+
+</body>
+</html>
