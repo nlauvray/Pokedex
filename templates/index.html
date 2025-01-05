@@ -1,8 +1,47 @@
-<html>
-	<head>
-		<title>Pokedex</title>
-	</head>
-	<body>
-		<h1>Hello World!</h1>
-	</body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <title>Pokedex</title>
+</head>
+<body>
+  <header class="pokemon-card-header">
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='pokeball3.png') }}" alt="Pokéball" class="pokeball-icon">
+            <h1>Pokédex</h1>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/types">Types</a></li>
+            <li><a href="/generations">Générations</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main class="pokemon-card-style">
+    <div class="search-container">
+        <input type="text" id="pokemon-search" placeholder="Rechercher un Pokémon...">
+        <button class="search-button">
+            <img src="{{ url_for('static', filename='pokeball3.png') }}" alt="Search" class="search-icon">
+        </button>
+    </div>
+
+    <div class="pokemon-content">
+        <h2>Bienvenue sur votre Pokédex</h2>
+        <p>Découvrez tous les Pokémon et leurs caractéristiques</p>
+        <div class="featured-pokemon">
+          {% for pokemon in pokemons %}
+          <div class="pokemon-card-style">
+            <h3><a href="{{ url_for('pokemon.pokemon', id=pokemon.name) }}">{{ pokemon.name }}</a></h3>
+              <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" >
+              <p>Voir plus...</p>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+  </main>
+</body>
 </html>

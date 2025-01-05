@@ -7,6 +7,9 @@ def get_routes(pokeApi: PokeApiClient):
 
     @bp.route('/pokemon/<id>')
     def pokemon(id):
-        return render_template('pokemon.html', pokemon=Pokemon.get_from_api(pokeApi, id))
+        pokemon_data = Pokemon.get_from_api(pokeApi, id)
+        pokemon_details = pokeApi.get_pokemon(id)
+
+        return render_template('pokemon.html', pokemon=pokemon_data, details=pokemon_details)
 
     return bp
