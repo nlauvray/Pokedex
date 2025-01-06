@@ -116,18 +116,18 @@ def dashboard():
         flash('vous devez être connecté pour accéder au tableau de bord.', 'danger')
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
-    return render_template('dashboard.html', user=user)  # Affiche la page du tableau de bord
+    return render_template('dashboard.html', user=user)
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    # Supprimer l'ID de l'utilisateur de la session (cela efface le cookie de session côté client)
+    # Supprimer l'ID de l'utilisateur de la session (efface le cookie de session côté client)
     session.pop('user_id', None)
     flash('Vous avez été déconnecté avec succès', 'success')
-    return redirect(url_for('home'))  # Redirige vers la page d'accueil après la déconnexion
+    return redirect(url_for('home')) 
 
-# Créer la base de données au début
+# Créer la base de données au début + crée toutes les tables nécessaires dans la base de données
 with app.app_context():
-    db.create_all()  # Crée toutes les tables nécessaires dans la base de données
+    db.create_all() 
 
 if __name__ == '__main__':
     app.run(debug=True)  # Activation du mode debug pour le développement
