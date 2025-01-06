@@ -8,8 +8,8 @@ from models.users import User
 from models.teams import Team
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-from Crypto.Random import get_random_bytes
 import base64
+import os
 
 # Fonction pour créer l'application Flask
 def create_app():
@@ -24,12 +24,33 @@ def create_app():
 # Créer l'application Flask
 app = create_app()
 
-# Générer une paire de clés RSA (publique/privée) à utiliser pour le chiffrement/déchiffrement
-def generate_rsa_keys():
-    private_key = RSA.generate(2048)
-    public_key = private_key.publickey()
-    
+# Chemins pour stocker les clés RSA
+PRIVATE_KEY_PATH = 'rsa_private.pem'
+PUBLIC_KEY_PATH = 'rsa_public.pem'
+
+# Charger ou générer des clés RSA persistantes
+def load_or_generate_rsa_keys():
+    if os.path.exists(PRIVATE_KEY_PATH) and os.path.exists(PUBLIC_KEY_PATH):
+        # Charger les clés existantes
+        with open(PRIVATE_KEY_PATH, 'rb') as private_file:
+            private_key = RSA.import_key(private_file.read())
+        with open(PUBLIC_KEY_PATH, 'rb') as public_file:
+            public_key = RSA.import_key(public_file.read())
+    else:
+        # Générer de nouvelles clés
+        private_key = RSA.generate(2048)
+        public_key = private_key.publickey()
+        
+        # Sauvegarder les clés dans des fichiers
+        with open(PRIVATE_KEY_PATH, 'wb') as private_file:
+            private_file.write(private_key.export_key())
+        with open(PUBLIC_KEY_PATH, 'wb') as public_file:
+            public_file.write(public_key.export_key())
+
     return private_key, public_key
+
+# Charger les clés RSA au démarrage
+private_key, public_key = load_or_generate_rsa_keys()
 
 # Chiffrement du mot de passe avec la clé publique RSA
 def encrypt_password_with_public_key(password, public_key):
@@ -43,9 +64,6 @@ def decrypt_password_with_private_key(encrypted_password, private_key):
     encrypted_password_bytes = base64.b64decode(encrypted_password)
     decrypted_password = cipher.decrypt(encrypted_password_bytes).decode('utf-8')
     return decrypted_password
-
-# Générer les clés RSA (à faire une seule fois et les stocker dans un fichier ou une variable sécurisée)
-private_key, public_key = generate_rsa_keys()
 
 # Route d'accueil
 @app.route('/')
