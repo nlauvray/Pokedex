@@ -1,5 +1,5 @@
 from . import db 
-from .teams import Team
+from . teams import Team
 from sqlalchemy.orm import validates
 
 class TeamPokemon(db.Model):

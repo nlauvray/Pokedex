@@ -1,4 +1,4 @@
-from app import db  # Corrige le chemin d'import
+from . import db  # Corrige le chemin d'import
 from datetime import datetime
 from sqlalchemy.orm import validates
 
