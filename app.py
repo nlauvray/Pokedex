@@ -79,7 +79,7 @@ def register():
         password = request.form['password']
 
         # Vérifier si l'utilisateur existe déjà
-        existing_user = User.query.filter_by(email=email).first()
+        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
         if existing_user:
             flash('Un utilisateur avec cet email existe déjà', 'danger')
             return redirect(url_for('register'))
@@ -109,7 +109,7 @@ def login():
         password = request.form['password']
 
         # Vérifier si l'utilisateur existe par email ou par nom d'utilisateur
-        user = User.query.filter((User.email == email) | (User.username == username)).first()
+        user = User.query.filter((User.email == email) and (User.username == username)).first()
         
         if user:
             # Déchiffrer le mot de passe avec la clé privée RSA
@@ -122,8 +122,6 @@ def login():
                 return redirect(url_for('dashboard'))  # Redirige vers la page du tableau de bord après la connexion
             else:
                 flash('Nom d\'utilisateur, email ou mot de passe incorrect', 'danger')
-        else:
-            flash('Nom d\'utilisateur, email ou mot de passe incorrect', 'danger')
 
     return render_template('login.html')  # Affiche le formulaire de connexion
 
