@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
+from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db
 from models.model_pokemon import Pokemon, Move
@@ -127,22 +128,29 @@ def login():
 
     return render_template('login.html')  # Affiche le formulaire de connexion
 
+# Vérifie si l'utilisateur est connecté
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('vous devez être connecté pour accéder à cette page.', 'danger')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Route protégée - Tableau de bord
 @app.route('/dashboard')
+@login_required
 def dashboard():
-    if 'user_id' not in session:
-        flash('vous devez être connecté pour accéder au tableau de bord.', 'danger')
-        return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     return render_template('dashboard.html', user=user)
 
+# Route pour créer une équipe
 @app.route('/dashboard/create_team', methods=['GET', 'POST'])
+@login_required
 def create_team():
-    if 'user_id' not in session:
-        flash('vous devez être connecté pour accéder à cette page.', 'danger')
-        return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
-    pokemons = Pokemon.query.all()  # Assurez-vous que vous avez un modèle Pokemon pour récupérer les pokémons disponibles
+    pokemons = Pokemon.query.all()
     if request.method == 'POST':
         team_name = request.form['team_name']
         selected_pokemons = request.form.getlist('pokemons')
@@ -156,11 +164,10 @@ def create_team():
         return redirect(url_for('dashboard'))
     return render_template('create_team.html', user=user, pokemons=pokemons)
 
+# Route pour supprimer une équipe
 @app.route('/dashboard/delete_team/<int:team_id>', methods=['POST'])
+@login_required
 def delete_team(team_id):
-    if 'user_id' not in session:
-        flash('vous devez être connecté pour accéder à cette page.', 'danger')
-        return redirect(url_for('login'))
     team = Team.query.get_or_404(team_id)
     if team.trainer_id != session['user_id']:
         flash('Vous n\'êtes pas autorisé à supprimer cette équipe.', 'danger')
@@ -170,14 +177,14 @@ def delete_team(team_id):
     flash('Équipe supprimée avec succès.', 'success')
     return redirect(url_for('dashboard'))
 
+# Route pour afficher une équipe
 @app.route('/dashboard/team/<int:team_id>')
+@login_required
 def view_team(team_id):
-    if 'user_id' not in session:
-        flash('vous devez être connecté pour accéder à cette page.', 'danger')
-        return redirect(url_for('login'))
     team = Team.query.get_or_404(team_id)
     return render_template('team.html', team=team)
 
+# Route pour afficher les détails d'un Pokémon
 @app.route('/logout', methods=['POST'])
 def logout():
     # Supprimer l'ID de l'utilisateur de la session (efface le cookie de session côté client)
