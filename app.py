@@ -136,21 +136,6 @@ def dashboard():
     user = User.query.get(session['user_id'])
     return render_template('dashboard.html', user=user)
 
-@app.route('/dashboard/teams', methods=['GET', 'POST'])
-def teams():
-    if 'user_id' not in session:
-        flash('vous devez être connecté pour accéder au tableau de bord.', 'danger')
-        return redirect(url_for('login'))
-    user = User.query.get(session['user_id'])
-    teams = Team.query.filter_by(user_id=user.id).all()
-    if request.method == 'POST':
-        team_name = request.form['team_name']
-        new_team = Team(name=team_name, user_id=user.id)
-        db.session.add(new_team)
-        db.session.commit()
-        return redirect(url_for('teams'))
-    return render_template('teams.html', user=user, teams=teams)
-
 @app.route('/dashboard/create_team', methods=['GET', 'POST'])
 def create_team():
     if 'user_id' not in session:
@@ -161,7 +146,7 @@ def create_team():
     if request.method == 'POST':
         team_name = request.form['team_name']
         selected_pokemons = request.form.getlist('pokemons')
-        new_team = Team(name=team_name, user_id=user.id)
+        new_team = Team(name=team_name, trainer_id=user.id)
         db.session.add(new_team)
         db.session.commit()
         for pokemon_id in selected_pokemons:
@@ -170,6 +155,28 @@ def create_team():
         db.session.commit()
         return redirect(url_for('dashboard'))
     return render_template('create_team.html', user=user, pokemons=pokemons)
+
+@app.route('/dashboard/delete_team/<int:team_id>', methods=['POST'])
+def delete_team(team_id):
+    if 'user_id' not in session:
+        flash('vous devez être connecté pour accéder à cette page.', 'danger')
+        return redirect(url_for('login'))
+    team = Team.query.get_or_404(team_id)
+    if team.trainer_id != session['user_id']:
+        flash('Vous n\'êtes pas autorisé à supprimer cette équipe.', 'danger')
+        return redirect(url_for('dashboard'))
+    db.session.delete(team)
+    db.session.commit()
+    flash('Équipe supprimée avec succès.', 'success')
+    return redirect(url_for('dashboard'))
+
+@app.route('/dashboard/team/<int:team_id>')
+def view_team(team_id):
+    if 'user_id' not in session:
+        flash('vous devez être connecté pour accéder à cette page.', 'danger')
+        return redirect(url_for('login'))
+    team = Team.query.get_or_404(team_id)
+    return render_template('team.html', team=team)
 
 @app.route('/logout', methods=['POST'])
 def logout():
