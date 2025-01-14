@@ -122,9 +122,7 @@
             color: var(--pokemon-red);
         }
 
-        .btn-logout {
-            background-color: var(--pokemon-red);
-            color: var(--pokemon-white);
+        .btn-logout, .btn-create-team {
             border: none;
             border-radius: 25px;
             padding: 1rem 2rem;
@@ -139,6 +137,11 @@
             margin: 2rem auto;
             display: block;
             font-family: inherit;
+            color: var(--pokemon-white);
+        }
+
+        .btn-logout {
+            background-color: var(--pokemon-red);
         }
 
         .btn-logout:hover {
@@ -147,6 +150,19 @@
         }
 
         .btn-logout:active {
+            transform: translateY(0);
+        }
+
+        .btn-create-team {
+            background-color: var(--pokemon-blue);
+        }
+        
+        .btn-create-team:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 117, 190, 0.3);
+        }
+        
+        .btn-create-team:active {
             transform: translateY(0);
         }
 
@@ -207,6 +223,10 @@
                 </div>
             {% endif %}
         </div>
+
+        {% if user.teams|length < 3 %}
+            <button class="btn-create-team" onclick="window.location.href='{{ url_for('create_team') }}'">Créer une nouvelle équipe</button>
+        {% endif %}
 
         <form action="{{ url_for('logout') }}" method="POST">
             <button type="submit" class="btn-logout">Se déconnecter</button>
