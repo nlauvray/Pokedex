@@ -1,148 +1,10 @@
-html lang="fr">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription Pokédex</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --pokemon-red: #FF0000;
-            --pokemon-blue: #0075BE;
-            --pokemon-yellow: #FFDE00;
-            --pokemon-black: #222224;
-            --pokemon-white: #FFFFFF;
-        }
-
-        body {
-            font-family: 'Press Start 2P', system-ui, sans-serif;
-            background-color: #f0f0f0;
-            background-image: repeating-linear-gradient(
-                45deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.1) 10px,
-                rgba(255, 255, 255, 0.2) 10px,
-                rgba(255, 255, 255, 0.2) 20px
-            );
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: var(--pokemon-white);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: var(--pokemon-red);
-            text-align: center;
-            text-shadow: 2px 2px var(--pokemon-black);
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-        }
-
-        .form-container {
-            background-color: #f8f8f8;
-            border: 3px solid var(--pokemon-black);
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 1rem 0;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            color: var(--pokemon-black);
-            margin-bottom: 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid var(--pokemon-blue);
-            border-radius: 5px;
-            font-size: 0.8rem;
-            margin-bottom: 1.5rem;
-            font-family: inherit;
-        }
-
-        input:focus {
-            border-color: var(--pokemon-yellow);
-            outline: none;
-            box-shadow: 0 0 5px rgba(255, 222, 0, 0.5);
-        }
-
-        button {
-            background-color: var(--pokemon-red);
-            color: var(--pokemon-white);
-            border: none;
-            border-radius: 25px;
-            padding: 1rem 2rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-            width: 100%;
-            font-family: inherit;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .messages {
-            list-style: none;
-            padding: 0;
-            margin-top: 1.5rem;
-        }
-
-        .messages li {
-            padding: 0.8rem;
-            border-radius: 5px;
-            margin-bottom: 0.5rem;
-            font-size: 0.7rem;
-        }
-
-        .error {
-            background-color: rgba(255, 0, 0, 0.1);
-            color: var(--pokemon-red);
-        }
-
-        .success {
-            background-color: rgba(0, 255, 0, 0.1);
-            color: #008000;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 1.4rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -164,7 +26,7 @@ html lang="fr">
                     <input type="password" name="password" id="password" required>
                 </div>
 
-                <button type="submit">Créer un compte</button>
+                <button class="btn-red" type="submit">Créer un compte</button>
             </form>
         </div>
 

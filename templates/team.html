@@ -5,111 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails de l'équipe</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --pokemon-red: #FF0000;
-            --pokemon-blue: #0075BE;
-            --pokemon-yellow: #FFDE00;
-            --pokemon-black: #222224;
-            --pokemon-white: #FFFFFF;
-        }
-
-        body {
-            font-family: 'Press Start 2P', system-ui, sans-serif;
-            background-color: #f0f0f0;
-            background-image: repeating-linear-gradient(
-                45deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.1) 10px,
-                rgba(255, 255, 255, 0.2) 10px,
-                rgba(255, 255, 255, 0.2) 20px
-            );
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: var(--pokemon-white);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        h1, h2 {
-            color: var(--pokemon-red);
-            text-shadow: 2px 2px var(--pokemon-black);
-            margin-bottom: 1.5rem;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        h2 {
-            font-size: 1.2rem;
-            border-bottom: 3px solid var(--pokemon-yellow);
-            padding-bottom: 0.5rem;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            background-color: #f8f8f8;
-            border: 2px solid var(--pokemon-blue);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
-            color: var(--pokemon-black);
-        }
-
-        .btn-dashboard, .btn-delete-team {
-            border: none;
-            border-radius: 25px;
-            padding: 1rem 2rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-            width: 100%;
-            max-width: 300px;
-            margin: 2rem auto;
-            display: block;
-            font-family: inherit;
-            color: var(--pokemon-white);
-        }
-
-        .btn-delete-team {
-            background-color: var(--pokemon-red);
-        }
-
-        .btn-delete-team:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-
-        .btn-delete-team:active, .btn-dashboard:active {
-            transform: translateY(0);
-        }
-
-        .btn-dashboard {
-            background-color: var(--pokemon-blue);
-        }
-        
-        .btn-dashboard:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 117, 190, 0.3);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -120,9 +16,9 @@
                 <li>{{ pokemon.name }}</li>
             {% endfor %}
         </ul>
-        <button class="btn-dashboard" onclick="window.location.href='{{ url_for('dashboard') }}'">Retour au tableau de bord</button>
+        <button class="btn-blue" onclick="window.location.href='{{ url_for('dashboard') }}'">Retour au tableau de bord</button>
         <form action="{{ url_for('delete_team', team_id=team.id) }}" method="POST" style="display:inline;">
-            <button type="submit" class="btn-delete-team">Supprimer l'équipe</button>
+            <button type="submit" class="btn-red">Supprimer l'équipe</button>
         </form>
     </div>
 </body>
