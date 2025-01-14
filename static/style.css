@@ -201,6 +201,10 @@ button:active {
     margin: 1rem 0;
 }
 
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
 .flash-message {
     position: fixed;
     top: 20px;
@@ -254,8 +258,8 @@ input {
     border: 2px solid var(--pokemon-blue);
     border-radius: 5px;
     font-size: 0.8rem;
-    margin-bottom: 1.5rem;
     font-family: inherit;
+    padding-right: 15px;
 }
 
 input::placeholder {
