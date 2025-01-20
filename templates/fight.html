@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -48,6 +49,29 @@
             left: 10px;
         }
 
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            padding: 10px;
+        }
+
+        .dropdown-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .dropdown-content li {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .dropdown-content li:hover {
+            background-color: #ddd;
+        }
+
         .battle-log {
             margin-top: 20px;
             background-color: #fff;
@@ -60,6 +84,7 @@
     </style>
 </head>
 <body>
+
     <div class="battle-screen">
         <div class="pokemon opponent">
             <img id="opponent-img" src="" alt="Opponent Pokémon">
@@ -70,10 +95,53 @@
         <div class="stats-box opponent-stats">
             <p>Opponent Abilities: <span id="opponent-abilities"></span></p>
             <p>Opponent Types: <span id="opponent-types"></span></p>
+            <p>Opponent Stats: <span id="opponent-stats"></span></p>
+            <p>Opponent Attacks: <span id="opponent-attacks"></span></p>
+            <p>Opponent Abilities: <span id="opponent-abilities"></span></p>
+            <p>Opponent Types: <span id="opponent-types"></span></p>
             <p>Opponent Stats: <span id="opponent-stats-info"></span></p>
             <p>Opponent Attacks: <span id="opponent-attacks"></span></p>
         </div>
+
         <div class="stats-box player-stats">
+            <button id="abilities-btn">Abilities</button>
+            <div class="dropdown-content" id="abilities-dropdown">
+                <ul>
+                    {% for ability in abilities %}
+                    <li>{{ ability.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <button id="types-btn">Types</button>
+            <div class="dropdown-content" id="types-dropdown">
+                <ul>
+                    {% for type in types %}
+                    <li>{{ type.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <button id="stats-btn">Stats</button>
+            <div class="dropdown-content" id="stats-dropdown">
+                <ul>
+                    {% for stat in stats %}
+                    <li>{{ stat.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <button id="attacks-btn">Attacks</button>
+            <div class="dropdown-content" id="attack-dropdown">
+                <ul>
+                    {% for attack in attacks %}
+                    <li onclick="useAttack('{{ attack.name }}')">{{ attack.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <button id="start-battle-btn">Start Battle</button>
+        </div>
             <p>Player Abilities: <span id="player-abilities"></span></p>
             <p>Player Types: <span id="player-types"></span></p>
             <p>Player Stats: <span id="player-stats-info"></span></p>
@@ -87,6 +155,67 @@
     <button id="defend-button" onclick="defend()">Defend</button>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("start-battle-btn").addEventListener("click", startBattle);
+
+            setupDropdown("abilities-btn", "abilities-dropdown");
+            setupDropdown("types-btn", "types-dropdown");
+            setupDropdown("stats-btn", "stats-dropdown");
+            setupDropdown("attacks-btn", "attack-dropdown");
+        });
+
+        function setupDropdown(buttonId, dropdownId) {
+            document.getElementById(buttonId).addEventListener("click", function() {
+                let dropdown = document.getElementById(dropdownId);
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
+
+            document.addEventListener("click", function(event) {
+                if (!event.target.matches("#" + buttonId)) {
+                    document.getElementById(dropdownId).style.display = "none";
+                }
+            });
+        }
+
+        function startBattle() {
+            fetch("/fight/start", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    player_team: "{{ player_team }}"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("opponent-abilities").innerText = data.opponent.abilities.join(", ");
+                document.getElementById("opponent-types").innerText = data.opponent.types.join(", ");
+                document.getElementById("opponent-stats").innerText = data.opponent.stats.join(", ");
+                document.getElementById("opponent-attacks").innerText = data.opponent.attacks.join(", ");
+
+                document.getElementById("player-img").src = data.player.image;
+                document.getElementById("opponent-img").src = data.opponent.image;
+            })
+            .catch(error => console.error("Erreur lors du lancement du combat:", error));
+        }
+
+        function useAttack(attackName) {
+            fetch("/fight/use_attack", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    attack: attackName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Vous avez utilisé ${attackName} ! Effet: ${data.effect}`);
+            })
+            .catch(error => console.error("Erreur lors de l'utilisation de l'attaque:", error));
+        }
         const playerPokemon = {
             name: "Charmander",
             abilities: ["Blaze", "Solar Power"],
@@ -166,5 +295,7 @@
             }
         }
     </script>
+
 </body>
 </html>
+
