@@ -47,6 +47,16 @@
             bottom: 10px;
             left: 10px;
         }
+
+        .battle-log {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border: 2px solid #333;
+            width: 800px;
+            height: 150px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -58,102 +68,103 @@
             <img id="player-img" src="" alt="Player Pokémon">
         </div>
         <div class="stats-box opponent-stats">
-            <p>Opponent Abilities: {{ abilities }}</p>
-            <p>Opponent Types: {{ types }}</p>
-            <p>Opponent Stats: {{ stats }}</p>
-            <p>Opponent Attacks: {{ attacks }}</p>
+            <p>Opponent Abilities: <span id="opponent-abilities"></span></p>
+            <p>Opponent Types: <span id="opponent-types"></span></p>
+            <p>Opponent Stats: <span id="opponent-stats-info"></span></p>
+            <p>Opponent Attacks: <span id="opponent-attacks"></span></p>
         </div>
         <div class="stats-box player-stats">
-            <button id="abilities-btn">Abilities: {{ abilities }}</button>
-            <div class="dropdown-content" id="abilities-dropdown">
-                <ul>
-                    {% for ability in abilities %}
-                    <li>{{ ability.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        
-            <button id="types-btn">Types: {{ types }}</button>
-            <div class="dropdown-content" id="types-dropdown">
-                <ul>
-                    {% for type in types %}
-                    <li>{{ type.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        
-            <button id="stats-btn">Stats: {{ stats }}</button>
-            <div class="dropdown-content" id="stats-dropdown">
-                <ul>
-                    {% for stat in stats %}
-                    <li>{{ stat.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        
-            <button id="attacks-btn">Attacks: {{ attacks }}</button>
-            <div class="dropdown-content" id="attack-dropdown">
-                <ul>
-                    {% for attack in attacks %}
-                    <li>{{ attack.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <p>Player Abilities: <span id="player-abilities"></span></p>
+            <p>Player Types: <span id="player-types"></span></p>
+            <p>Player Stats: <span id="player-stats-info"></span></p>
+            <p>Player Attacks: <span id="player-attacks"></span></p>
         </div>        
     </div>
 
     <button onclick="startBattle()">Start Battle</button>
-    <div id="battle-log"></div>
-    <button id="attack-button" data-move="tackle">Tackle</button>
-    <button id="defend-button" data-move="defend">Defend</button>
+    <div id="battle-log" class="battle-log"></div>
+    <button id="attack-button" onclick="attack()">Tackle</button>
+    <button id="defend-button" onclick="defend()">Defend</button>
 
     <script>
+        const playerPokemon = {
+            name: "Charmander",
+            abilities: ["Blaze", "Solar Power"],
+            types: ["Fire"],
+            stats: { hp: 100, attack: 50, defense: 40 },
+            attacks: ["Tackle", "Ember", "Scratch"]
+        };
+
+        const opponentPokemon = {
+            name: "Bulbasaur",
+            abilities: ["Overgrow", "Chlorophyll"],
+            types: ["Grass", "Poison"],
+            stats: { hp: 100, attack: 40, defense: 50 },
+            attacks: ["Tackle", "Vine Whip", "Leech Seed"]
+        };
+
+        let playerTurn = true;
+
         function startBattle() {
-            fetch('/fight/start_battle', {
-                method: 'POST',
-                body: JSON.stringify({
-                    player_team: ['charmander', 'squirtle', 'bulbasaur'],
-                    opponent_team: ['bulbasaur', 'charmander', 'squirtle']
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            }).then(response => response.json()).then(data => {
-                document.getElementById('battle-log').innerHTML = data.message;
-                document.getElementById('player-img').src = `/static/charmander.png`;
-                document.getElementById('opponent-img').src = `/static/bulbasaur.png`;
-            });
+            // Afficher les images des Pokémon
+            document.getElementById('player-img').src = "/static/charmander.png";
+            document.getElementById('opponent-img').src = "/static/bulbasaur.png";
+
+            // Afficher les stats des Pokémon
+            document.getElementById('player-abilities').textContent = playerPokemon.abilities.join(", ");
+            document.getElementById('player-types').textContent = playerPokemon.types.join(", ");
+            document.getElementById('player-stats-info').textContent = `HP: ${playerPokemon.stats.hp}, Attack: ${playerPokemon.stats.attack}, Defense: ${playerPokemon.stats.defense}`;
+            document.getElementById('player-attacks').textContent = playerPokemon.attacks.join(", ");
+
+            document.getElementById('opponent-abilities').textContent = opponentPokemon.abilities.join(", ");
+            document.getElementById('opponent-types').textContent = opponentPokemon.types.join(", ");
+            document.getElementById('opponent-stats-info').textContent = `HP: ${opponentPokemon.stats.hp}, Attack: ${opponentPokemon.stats.attack}, Defense: ${opponentPokemon.stats.defense}`;
+            document.getElementById('opponent-attacks').textContent = opponentPokemon.attacks.join(", ");
+
+            // Afficher le log de combat
+            document.getElementById('battle-log').innerHTML = "Battle has begun!";
         }
 
-        document.getElementById('battle-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const playerPokemon = document.getElementById('player-pokemon').value;
-            const opponentPokemon = document.getElementById('opponent-pokemon').value;
-            fetch('/fight/start_battle', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ player_pokemon: playerPokemon, opponent_pokemon: opponentPokemon })
-            }).then(response => response.json()).then(data => {
-                document.getElementById('battle-log').innerHTML = data.message;
-                document.getElementById('player-img').src = `/static/charmander.png`;
-                document.getElementById('opponent-img').src = `/static/bulbasaur.png`;
-            });
-        });
+        function attack() {
+            if (playerTurn) {
+                const damage = playerPokemon.stats.attack - opponentPokemon.stats.defense;
+                opponentPokemon.stats.hp -= damage;
+                document.getElementById('battle-log').innerHTML += `<p>Player's ${playerPokemon.name} attacks with Tackle! Opponent's ${opponentPokemon.name} takes ${damage} damage!</p>`;
+                checkBattleStatus();
+            }
+        }
 
-        document.getElementById('attack-button').addEventListener('click', function() {
-            const move = this.getAttribute('data-move');
-            fetch('/fight/battle_turn', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ move: move })
-            }).then(response => response.json()).then(data => {
-                document.getElementById('battle-log').innerHTML += '<p>' + data.result + '</p>';
-            });
-        });
+        function defend() {
+            if (playerTurn) {
+                document.getElementById('battle-log').innerHTML += `<p>Player's ${playerPokemon.name} is defending!</p>`;
+                // Example of defense logic
+            }
+        }
+
+        function checkBattleStatus() {
+            if (opponentPokemon.stats.hp <= 0) {
+                document.getElementById('battle-log').innerHTML += `<p>${opponentPokemon.name} has fainted! Player wins!</p>`;
+                playerTurn = false; // Stop the game after victory
+            } else {
+                playerTurn = false;
+                setTimeout(opponentTurn, 1000);
+            }
+        }
+
+        function opponentTurn() {
+            const damage = opponentPokemon.stats.attack - playerPokemon.stats.defense;
+            playerPokemon.stats.hp -= damage;
+            document.getElementById('battle-log').innerHTML += `<p>Opponent's ${opponentPokemon.name} attacks with Tackle! Player's ${playerPokemon.name} takes ${damage} damage!</p>`;
+            checkPlayerStatus();
+        }
+
+        function checkPlayerStatus() {
+            if (playerPokemon.stats.hp <= 0) {
+                document.getElementById('battle-log').innerHTML += `<p>${playerPokemon.name} has fainted! Opponent wins!</p>`;
+            } else {
+                playerTurn = true;
+            }
+        }
     </script>
 </body>
 </html>
