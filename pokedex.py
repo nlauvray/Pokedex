@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from infrastructure.pokeapi import PokeApiClient
 from controllers.pokemon_fight_api import get_pokemon_fight_routes
 import os
@@ -24,15 +24,13 @@ def home():
 def home_redirect():
     return render_template('home.html')
 
-# Route pour le combat avec une méthode POST
 @app.route('/fight', methods=['GET', 'POST'])
 def fight():
     if request.method == 'POST':
-        player_team = request.json.get('player_team')
+        player_team = request.form.getlist('player_team')
         if not player_team:
             return jsonify({"error": "No player team provided"}), 400
-        # Logique pour démarrer le combat avec l'équipe du joueur
-        return jsonify({"message": "Fight started!"})
+        return redirect(url_for('pokefight.start_battle', player_team=player_team))
     return render_template('fight.html')
 
 if __name__ == "__main__":
