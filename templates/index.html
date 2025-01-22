@@ -13,7 +13,7 @@
     <nav class="main-nav">
         <div class="nav-logo">
             <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
-            <h1>Pokédex</h1>
+            <a href="/"><h1>Pokédex</h1></a>
         </div>
         <ul class="nav-menu">
             <li><a href="/profil">Profil</a></li>
@@ -25,10 +25,12 @@
 
   <main class="pokemon-card-style">
     <div class="search-container">
-        <input type="text" id="pokemon-search" placeholder="Rechercher un Pokémon...">
-        <button class="search-button">
+      <form action="/search" method="get">
+        <input type="text" name="query" id="pokemon-search" placeholder="Rechercher un Pokémon...">
+        <button type="submit" class="search-button">
             <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Search" class="search-icon">
         </button>
+      </form>
     </div>
 
     <div class="pokemon-content">
@@ -38,7 +40,7 @@
           <div class="pokemon-card-style">
             <h3>{{ pokemon.name }}</h3>
               <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" >
-              <a href="{{ url_for('pokemon.pokemon', id=pokemon.name) }}">
+              <a href="/pokemon/{{ pokemon.name }}">
                 <button class="btn-detail-pokemon">Voir plus</button>
               </a>
           </div>
@@ -46,5 +48,6 @@
         </div>
     </div>
   </main>
+  <script src="{{ url_for('static', filename='search.js') }}"></script>
 </body>
 </html>
