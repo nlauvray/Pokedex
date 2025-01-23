@@ -13,3 +13,13 @@ class PokeApiClient:
         url = f"{self.base_url}/pokemon/{identifier}"
         response = requests.get(url)
         return response.json()
+
+    def get_moves(self, limit: int = 20, offset: int = 0):
+        url = f"{self.base_url}/move"
+        response = requests.get(url)
+        return response.json()
+
+    def get_move(self, identifier: int or str):
+        url = f"{self.base_url}/move/{identifier}"
+        response = requests.get(url)
+        return response.json()
