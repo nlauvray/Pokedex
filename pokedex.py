@@ -12,9 +12,10 @@ from Crypto.Cipher import PKCS1_OAEP
 import base64
 import os
 
-from controllers import auth, teams
+from controllers import auth, teams, pokedex
 
 from systems.auth import AuthSystem
+from infrastructure.pokeapi import PokeApiClient
 
 app = Flask(
     __name__,
@@ -30,10 +31,12 @@ db.init_app(app)
 
 # Systems
 auth_system = AuthSystem()
+pokeapi_client = PokeApiClient("https://pokeapi.co/api/v2")
 
 # Blueprints
 app.register_blueprint(auth.get_routes(auth_system))
 app.register_blueprint(teams.get_routes())
+app.register_blueprint(pokedex.get_routes(pokeapi_client))
 
 # Créer la base de données au début + crée toutes les tables nécessaires dans la base de données
 with app.app_context():

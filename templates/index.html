@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil - Pokédex</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <title>Pokedex</title>
 </head>
 <body>
-    <div class="container">
-        <div class="pokeball-header"></div>
-        <h1>Bienvenue dans votre Pokédex personnel !</h1>
-
-        <div class="buttons-container">
-            <button class="btn-blue" onclick="window.location.href='{{ url_for('register') }}'">Créer un compte</button>
-            <button class="btn-red" onclick="window.location.href='{{ url_for('login') }}'">Se connecter</button>
+  <header class="pokemon-card-header">
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
+            <a href="/"><h1>Pokédex</h1></a>
         </div>
+        <ul class="nav-menu">
+            <li><a href="/profil">Profil</a></li>
+            <li><a href="/combats">Combats</a></li>
+			<li><a href="{{ url_for('auth.login') }}">Connexion</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main class="pokemon-card-style">
+    <div class="search-container">
+  	  <form action="{{ url_for('pokedex.search') }}" method="get">
+        <input type="text" name="query" id="pokemon-search" placeholder="Rechercher un Pokémon...">
+        <button type="submit" class="search-button">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Search" class="search-icon">
+        </button>
+      </form>
     </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div id="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash-message flash-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const flashMessages = document.querySelectorAll('.flash-message');
-            
-            flashMessages.forEach(function(message) {
-                message.style.display = 'block';
-                
-                setTimeout(function() {
-                    message.style.opacity = '0';
-                    message.style.transition = 'opacity 0.5s ease-out';
-                    
-                    setTimeout(function() {
-                        message.style.display = 'none';
-                    }, 500);
-                }, 5000);
-            });
-        });
-    </script>
+    <div class="pokemon-content">
+        <h2>Bienvenue sur Pokédex</h2>
+        <div class="featured-pokemon">
+          {% for pokemon in pokemons %}
+          <div class="pokemon-card-style">
+            <h3>{{ pokemon.name }}</h3>
+              <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" >
+				<a href="{{ url_for('pokedex.pokemon', id=pokemon.id) }}">
+                <button class="btn-detail-pokemon">Voir plus</button>
+              </a>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+  </main>
+  <script src="{{ url_for('static', filename='search.js') }}"></script>
 </body>
 </html>

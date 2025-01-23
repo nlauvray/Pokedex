@@ -55,7 +55,7 @@ def get_routes(auth_system: AuthSystem):
                 if decrypted_password == password:  # Vérification du mot de passe
                     session['user_id'] = user.id
                     flash('Connexion réussie', 'success')
-                    return redirect(url_for('teams.create_team'))  # Redirige vers la page du tableau de bord après la connexion
+                    return redirect(url_for('pokedex.pokedex'))  # Redirige vers la page du tableau de bord après la connexion
                 else:
                     flash('Nom d\'utilisateur, email ou mot de passe incorrect', 'danger')
 

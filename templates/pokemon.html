@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='pokemon.css') }}">
+  <title>{{ pokemon.name }} - Détails</title>
+</head>
+<body>
+  <header class="pokemon-card-header">
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
+            <h1>{{ pokemon.name }} - Détails</h1>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/types">Types</a></li>
+            <li><a href="/generations">Générations</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main class="pokemon-card-style">
+    <div class="pokemon-content pokemon-details-container">
+        <h2>{{ pokemon.name }}</h2>
+        <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" />
+        <p><strong>Types:</strong>
+          {% for type in pokemon.types %}
+            <span class="type-badge {{ type }}">{{ type.capitalize() }}</span>
+          {% endfor %}
+        </p>
+
+
+        <h3>Statistiques</h3>
+        <ul>
+            {% for stat, value in pokemon.stats.items() %}
+                <li><strong>{{ stat.capitalize() }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Détails supplémentaires</h3>
+        <p><strong>Poids:</strong> {{ pokemon.weight }} hectogrammes</p>
+        <p><strong>Taille:</strong> {{ pokemon.height }} décimètres</p>
+    </div>
+  </main>
+</body>
+</html>
