@@ -1,7 +1,5 @@
-from flask import Flask, render_template
-from infrastructure.pokeapi import PokeApiClient
-
-from controllers import pokedex, pokemon
+from flask import Flask
+from controllers.routes import get_routes
 
 app = Flask(
     __name__,
@@ -10,10 +8,7 @@ app = Flask(
     template_folder='./templates'
 )
 
-pokeApi = PokeApiClient('https://pokeapi.co/api/v2')
-
-app.register_blueprint(pokedex.get_routes())
-app.register_blueprint(pokemon.get_routes(pokeApi))
+app.register_blueprint(get_routes())
 
 if __name__ == '__main__':
     app.run()

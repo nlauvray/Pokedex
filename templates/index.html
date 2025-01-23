@@ -1,8 +1,53 @@
-<html>
-	<head>
-		<title>Pokedex</title>
-	</head>
-	<body>
-		<h1>Hello World!</h1>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <title>Pokedex</title>
+</head>
+<body>
+  <header class="pokemon-card-header">
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
+            <a href="/"><h1>Pokédex</h1></a>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="/profil">Profil</a></li>
+            <li><a href="/combats">Combats</a></li>
+            <li><a href="/login">Connexion</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main class="pokemon-card-style">
+    <div class="search-container">
+      <form action="/search" method="get">
+        <input type="text" name="query" id="pokemon-search" placeholder="Rechercher un Pokémon...">
+        <button type="submit" class="search-button">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Search" class="search-icon">
+        </button>
+      </form>
+    </div>
+
+    <div class="pokemon-content">
+        <h2>Bienvenue sur Pokédex</h2>
+        <div class="featured-pokemon">
+          {% for pokemon in pokemons %}
+          <div class="pokemon-card-style">
+            <h3>{{ pokemon.name }}</h3>
+              <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" >
+              <a href="/pokemon/{{ pokemon.name }}">
+                <button class="btn-detail-pokemon">Voir plus</button>
+              </a>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+  </main>
+  <script src="{{ url_for('static', filename='search.js') }}"></script>
+</body>
 </html>

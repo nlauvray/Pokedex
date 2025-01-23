@@ -148,4 +148,4 @@ class Pokemon:
     @staticmethod
     def list_from_api(api_client: PokeApiClient, limit: int = 20, offset: int = 0):
         json = api_client.get_pokemons(limit, offset)
-        return [get_from_api(api_client, p["name"]) for p in json["results"]]
+        return [Pokemon.get_from_api(api_client, p["name"]) for p in json["results"]]
