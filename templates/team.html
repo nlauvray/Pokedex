@@ -16,10 +16,23 @@
                 <li>{{ pokemon.name }}</li>
             {% endfor %}
         </ul>
-        <button class="btn-blue" onclick="window.location.href='{{ url_for('dashboard') }}'">Retour au tableau de bord</button>
-        <form action="{{ url_for('delete_team', team_id=team.id) }}" method="POST" style="display:inline;">
-            <button type="submit" class="btn-red">Supprimer l'équipe</button>
-        </form>
+		<!-- <button class="btn-blue" onclick="window.location.href='TBD'">Retour au tableau de bord</button> -->
+		<button type="submit" class="btn-red" onclick="delete_team()">Supprimer l'équipe</button>
+		<script>
+			function delete_team() {
+				if (confirm("Etes-vous sur de vouloir supprimer cette équipe ?")) {
+					fetch('/teams/{{ team.id }}', {
+						method: 'DELETE',
+					})
+					.then(response => {
+						window.location.href = "{{ url_for('teams.create_team') }}";
+					})
+					.catch(error => {
+						console.error(error);
+					});
+				}
+			}
+		</script>
     </div>
 </body>
 </html>

@@ -23,7 +23,7 @@
                     <div class="team-card">
                         <h3>{{ team.name }}</h3>
                         <p><strong>Nombre de Pokémon:</strong> {{ team.pokemons|length }}</p>
-                        <a href="{{ url_for('view_team', team_id=team.id) }}">Voir les détails de l'équipe →</a>
+                        <a href="{{ url_for('teams.team', team_id=team.id) }}">Voir les détails de l'équipe →</a>
                     </div>
                 {% endfor %}
             {% else %}

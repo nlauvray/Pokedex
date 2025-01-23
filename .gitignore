@@ -1,2 +1,6 @@
 __pycache__/
 venv/
+.instance/
+.migrations/
+.rsa_private.pem
+.rsa_public.pem
