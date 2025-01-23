@@ -34,10 +34,10 @@
         </div>
 
         {% if user.teams|length < 3 %}
-            <button class="btn-blue" onclick="window.location.href='{{ url_for('create_team') }}'">Créer une nouvelle équipe</button>
+            <button class="btn-blue" onclick="window.location.href='{{ url_for('teams.create_team') }}'">Créer une nouvelle équipe</button>
         {% endif %}
 
-        <form action="{{ url_for('logout') }}" method="POST">
+        <form action="{{ url_for('auth.logout') }}" method="POST">
             <button type="submit" class="btn-red">Se déconnecter</button>
         </form>
     </div>

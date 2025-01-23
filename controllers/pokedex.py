@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, render_template, request
 from models.pokemon import Pokemon
 from infrastructure.pokeapi import PokeApiClient
+import jsonpickle
 
 def get_routes(poke_api: PokeApiClient):
     bp = Blueprint('pokedex', __name__)
@@ -8,8 +9,7 @@ def get_routes(poke_api: PokeApiClient):
     # Route principale du Pokédex
     @bp.route('/')
     def pokedex():
-        pokemons = Pokemon.list_from_api(poke_api)
-        return render_template('index.html', pokemons=pokemons)
+        return render_template('index.html')
 
     # Route pour afficher les détails d'un Pokémon
     @bp.route('/pokemon/<int:id>')
@@ -21,18 +21,12 @@ def get_routes(poke_api: PokeApiClient):
     @bp.route('/search', methods=['GET'])
     def search():
         query = request.args.get('query', '').strip().lower()
-        pokemons = []
+        page = request.args.get('page', 1, type=int)
+        count, pokemons = Pokemon.search_from_api(poke_api, query, offset=(page - 1) * 20)
 
-        if query:
-            try:
-                pokemon_data = poke_api.get_pokemon(query)
-                pokemons = [{
-                    'name': pokemon_data['name'],
-                    'image_url': pokemon_data['sprites']['front_default']
-                }]
-            except ValueError:
-                pokemons = []
-
-        return jsonify(pokemons)
+        return jsonpickle.encode({
+            'pokemons': pokemons,
+            'max_page': count // 20
+        })
 
     return bp

@@ -68,4 +68,10 @@ def get_routes(auth_system: AuthSystem):
         flash('Vous avez été déconnecté avec succès', 'success')
         return redirect(url_for('auth.login')) 
 
+    @bp.route("/profile", methods=["GET"])
+    @AuthSystem.login_required
+    def profile():
+        user = User.query.get(session['user_id'])
+        return render_template("profile.html", user=user)
+
     return bp

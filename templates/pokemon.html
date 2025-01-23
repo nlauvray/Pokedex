@@ -25,18 +25,18 @@
   <main class="pokemon-card-style">
     <div class="pokemon-content pokemon-details-container">
         <h2>{{ pokemon.name }}</h2>
-        <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" />
+        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" />
         <p><strong>Types:</strong>
           {% for type in pokemon.types %}
-            <span class="type-badge {{ type }}">{{ type.capitalize() }}</span>
+            <span class="type-badge {{ type }}">{{ type.name.capitalize() }}</span>
           {% endfor %}
         </p>
 
 
         <h3>Statistiques</h3>
         <ul>
-            {% for stat, value in pokemon.stats.items() %}
-                <li><strong>{{ stat.capitalize() }}:</strong> {{ value }}</li>
+            {% for stat in pokemon.stats %}
+                <li><strong>{{ stat.name.capitalize() }}:</strong> {{ stat.base_stat }}</li>
             {% endfor %}
         </ul>
 
