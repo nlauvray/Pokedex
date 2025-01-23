@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'équipe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ team.name }}</h1>
+        <h2>Pokémons dans l'équipe :</h2>
+        <ul>
+            {% for pokemon in team.pokemons %}
+                <li>{{ pokemon.name }}</li>
+            {% endfor %}
+        </ul>
+		<button class="btn-blue" onclick="window.location.href='{{ url_for('auth.profile') }}'">Retour au tableau de bord</button>
+		<button type="submit" class="btn-red" onclick="delete_team()">Supprimer l'équipe</button>
+		<script>
+			function delete_team() {
+				if (confirm("Etes-vous sur de vouloir supprimer cette équipe ?")) {
+					fetch('/teams/{{ team.id }}', {
+						method: 'DELETE',
+					})
+					.then(response => {
+						window.location.href = "{{ url_for('auth.profile') }}";
+					})
+					.catch(error => {
+						console.error(error);
+					});
+				}
+			}
+		</script>
+    </div>
+</body>
+</html>

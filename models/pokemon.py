@@ -149,3 +149,23 @@ class Pokemon:
     def list_from_api(api_client: PokeApiClient, limit: int = 20, offset: int = 0):
         json = api_client.get_pokemons(limit, offset)
         return [Pokemon.get_from_api(api_client, p["name"]) for p in json["results"]]
+
+    @staticmethod
+    def search_from_api(api_client: PokeApiClient, query: str, limit: int = 20, offset: int = 0):
+        if query == "":
+            return Pokemon.count(api_client), Pokemon.list_from_api(api_client, limit, offset)
+        json = api_client.get_pokemons(-1, 0)
+
+        results = []
+        for p in json["results"]:
+            if query.lower() in p["name"].lower():
+                results.append(Pokemon.get_from_api(api_client, p["name"]))
+
+        offset = min(offset, len(results)-1)
+        end = min(offset + limit, len(results))
+        return len(results), results[offset:end]
+
+    @staticmethod
+    def count(api_client: PokeApiClient):
+        json = api_client.get_pokemons()
+        return json["count"]

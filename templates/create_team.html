@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer une nouvelle équipe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Créer une nouvelle équipe</h1>
+        <form method="POST">
+            <label for="team_name">Nom de l'équipe:</label>
+            <input type="text" id="team_name" name="team_name" required>
+            <h2>Choisissez vos Pokémon (jusqu'à 5):</h2>
+            <div class="pokemons">
+                {% for pokemon in pokemons %}
+                    <div class="pokemon">
+                        <input type="checkbox" id="pokemon_{{ pokemon.id }}" name="pokemons" value="{{ pokemon.id }}">
+                        <label for="pokemon_{{ pokemon.id }}">{{ pokemon.name }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn-blue">Créer l'équipe</button>
+        </form>
+    </div>
+</body>
+</html>
