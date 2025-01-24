@@ -4,22 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='pokemon.css') }}">
   <title>{{ pokemon.name }} - Détails</title>
 </head>
 <body>
-  {% include 'header.html' %}
+  <header class="pokemon-card-header">
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
+            <h1>{{ pokemon.name }}</h1>
+        </div>
+        <ul class="nav-menu">
+		  <li><a href="{{ url_for('auth.profile') }}">Profil</a></li>
+					{#<!--<li><a href="{{ url_for('fight.index') }}">Combats</a></li>-->#}
+          <li><a href="{{ url_for('auth.login') }}">Connexion</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <main class="pokemon-card-style">
+  <main >
     <div class="pokemon-content pokemon-details-container">
         <h2>{{ pokemon.name }}</h2>
-        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" />
-        <p><strong>Types:</strong>
+        <p>
           {% for type in pokemon.types %}
             <span class="type-badge {{ type }}">{{ type.name.capitalize() }}</span>
           {% endfor %}
         </p>
+        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" />
 
 
         <h3>Statistiques</h3>
@@ -30,8 +43,16 @@
         </ul>
 
         <h3>Détails supplémentaires</h3>
-        <p><strong>Poids:</strong> {{ pokemon.weight }} hectogrammes</p>
-        <p><strong>Taille:</strong> {{ pokemon.height }} décimètres</p>
+        <ul class="additional-details">
+          <li>
+            <strong>Poids:</strong>
+            <span>{{ pokemon.weight }} hectogrammes</span>
+          </li>
+          <li>
+            <strong>Taille:</strong>
+            <span>{{ pokemon.height }} décimètres</span>
+          </li>
+        </ul>
     </div>
   </main>
 </body>
