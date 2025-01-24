@@ -1,4 +1,5 @@
 import requests
+
 class PokeApiClient:
     def __init__(self, base_url: int):
         self.base_url = base_url

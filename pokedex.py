@@ -16,9 +16,12 @@ from systems.auth import AuthSystem
 from systems.fight import FightSystem
 from infrastructure.pokeapi import PokeApiClient
 
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.secret_key = 'BAD_SECRET_KEY'
+app = Flask(
+    __name__,
+    template_folder='templates',
+    static_folder='static',
+    static_url_path='/static'
+)
 
 app.config.from_object('config.Config')  # Utiliser un fichier config séparé
 

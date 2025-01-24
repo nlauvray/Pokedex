@@ -29,7 +29,7 @@ def get_routes(pokeApi: PokeApiClient, fightSystem: FightSystem):
             fight = Fight.get(fight_id)
             player_pokemons = [Pokemon.get_from_api(pokeApi, pokemon) for pokemon in fight.team1.pokemons]
             opponent_pokemons = [Pokemon.get_from_api(pokeApi, pokemon) for pokemon in fight.team2.pokemons]
-        
+
         return render_template('fight.html')
 
     @bp.route('/battle_turn', methods=['POST'])
@@ -39,16 +39,16 @@ def get_routes(pokeApi: PokeApiClient, fightSystem: FightSystem):
         current_player = session.get('current_player')
         if not fight_id or not current_player:
             return redirect(url_for('fight.index'))
-        
+
         fight = Fight.get(fight_id)
         new_hp = battle_manager.turn(fight, current_player, move_name)
 
         if type(new_hp) == bool:
             return jsonpickle.encode({'error': 'Current pokemon has fainted, choose another'}), 400
-        
+
         if new_hp != 0:
             session['current_player'] = 1 if current_player == 2 else 2
-        
+
         return jsonpickle.encode({'current_player': session.get('current_player'), 'new_hp': new_hp})
 
     @bp.route('/change_pokemon', methods=['POST'])
@@ -58,12 +58,12 @@ def get_routes(pokeApi: PokeApiClient, fightSystem: FightSystem):
         current_player = session.get('current_player')
         if not fight_id or not current_player:
             return redirect(url_for('fight.index'))
-        
+
         fight = Fight.get(fight_id)
         done = battle_manager.change_pokemon(fight, current_player, slot)
 
         session['current_player'] = 1 if current_player == 2 else 2
-        
+
         if not done:
             return jsonpickle.encode({'error': 'Choosen pokemon has fainted'}), 400
 
