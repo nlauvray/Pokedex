@@ -45,7 +45,7 @@ L'application sera lancée sur l'addresse configurée dans `config.py` (par exem
 
 La page principale de l'application présente un pokédex, sur lequel les utilisateurs peuvent rechercher des pokémons et voir leur détails.
 
-Pour créer des équipes et faire des combats, les utilisateurs doivent être authentifier.
+Pour créer des équipes et faire des combats, les utilisateurs doivent être authentifié.
 Vous pouvez voir et gérer vos équipes depuis votre profil.
 Pour le moment, l'interface des combats n'est pas disponible. Cependant, une API est disponible.
 
@@ -53,7 +53,7 @@ Pour le moment, l'interface des combats n'est pas disponible. Cependant, une API
 
 Cette application est construite autour de Flask et SQLAlchemy. Elle utilise l'API [PokeAPI](https://pokeapi.co/) pour obtenir les données des pokémons.
 
-L'applicaation est structurée de la façon suivante :
+L'application est structurée de la façon suivante :
 - `config.py` : Configuration de l'application
 - `pokedex.py` : Point d'entrée de l'application, configure et lance le serveur
 - `controllers/` : Contrôleurs de l'application. Chaque contrôleurs définit une fonction `get_routes` qui prend en paramètre les systèmes nécessaire à l'exécution des contrôleurs, et retourne un blueprint Flask, qui sera ajouté à l'application
