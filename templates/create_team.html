@@ -10,20 +10,49 @@
 <body>
     <div class="container">
         <h1>Créer une nouvelle équipe</h1>
-        <form method="POST">
+        <form method="POST" id="create-team-form">
             <label for="team_name">Nom de l'équipe:</label>
             <input type="text" id="team_name" name="team_name" required>
-            <h2>Choisissez vos Pokémon (jusqu'à 5):</h2>
-            <div class="pokemons">
+            <h2>Vos Pokémons (5 max):</h2>
+            <ul id="selected-pokemons"></ul>
+            <h2>Ajouter des Pokémons :</h2>
+            <ul>
                 {% for pokemon in pokemons %}
-                    <div class="pokemon">
-                        <input type="checkbox" id="pokemon_{{ pokemon.id }}" name="pokemons" value="{{ pokemon.id }}">
-                        <label for="pokemon_{{ pokemon.id }}">{{ pokemon.name }}</label>
-                    </div>
+                    <li>
+                        {{ pokemon.name }}
+                        <button type="button" onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}')">+</button>
+                    </li>
                 {% endfor %}
-            </div>
+            </ul>
             <button type="submit" class="btn-blue">Créer l'équipe</button>
         </form>
+        <button class="btn-blue" onclick="window.location.href='{{ url_for('auth.profile') }}'">Retour au tableau de bord</button>
+        <script>
+            let selectedPokemons = [];
+
+            function add_to_team(pokemon_id, pokemon_name) {
+                if (selectedPokemons.length >= 5) {
+                    alert("Vous ne pouvez ajouter que 5 Pokémons à l'équipe.");
+                    return;
+                }
+                if (!selectedPokemons.includes(pokemon_id)) {
+                    selectedPokemons.push(pokemon_id);
+                    const selectedPokemonsList = document.getElementById('selected-pokemons');
+                    const newPokemon = document.createElement('li');
+                    newPokemon.textContent = pokemon_name;
+                    selectedPokemonsList.appendChild(newPokemon);
+                }
+            }
+
+            document.getElementById('create-team-form').addEventListener('submit', function(event) {
+                const form = event.target;
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'pokemons';
+                input.value = selectedPokemons.join(',');
+                form.appendChild(input);
+            });
+        </script>
     </div>
 </body>
 </html>

@@ -16,6 +16,10 @@ a {
   color: black;
 }
 
+#h1-header {
+  color: white;
+}
+
 .pokemon-card-header {
   background-color: #ff0000;
   padding: 1rem;

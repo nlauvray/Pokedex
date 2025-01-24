@@ -9,19 +9,7 @@
   <title>Pokedex</title>
 </head>
 <body>
-  <header class="pokemon-card-header">
-    <nav class="main-nav">
-        <div class="nav-logo">
-            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
-            <a href="/"><h1>Pokédex</h1></a>
-        </div>
-        <ul class="nav-menu">
-			<li><a href="{{ url_for('auth.profile') }}">Profil</a></li>
-            <li><a href="/combats">Combats</a></li>
-			<li><a href="{{ url_for('auth.login') }}">Connexion</a></li>
-        </ul>
-    </nav>
-  </header>
+  {% include 'header.html' %}
 
   <main class="pokemon-card-style">
     <div class="search-container">
@@ -37,6 +25,11 @@
         <h2>Bienvenue sur Pokédex</h2>
 		<span id="loading-icon" class="spinner"></span>
         <div class="featured-pokemon">
+            <ul>
+                {% for pokemon in all_pokemons %}
+                    <li>{{ pokemon.name }}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 	
@@ -50,11 +43,11 @@
 
   <template id="pokemon-card-template">
     <div class="pokemon-card-style">
-	  <h3 class="pokemon-name"></h3>
-	  <img class="pokemon-img">
-	  <a class="pokemon-link">
-		<button class="btn-detail-pokemon">Voir plus</button>
-	  </a>
+      <h3 class="pokemon-name"></h3>
+      <img class="pokemon-img">
+      <a class="pokemon-link">
+        <button class="btn-detail-pokemon">Voir plus</button>
+      </a>
     </div>
   </template>
 </body>

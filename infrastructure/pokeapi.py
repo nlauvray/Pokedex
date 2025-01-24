@@ -12,7 +12,7 @@ class PokeApiClient:
 
         return response.json()
 
-    def get_pokemon(self, identifier: int or str):
+    def get_pokemon(self, identifier: int or str): # type: ignore
         url = f"{self.base_url}/pokemon/{identifier}"
         response = requests.get(url)
         if response.status_code != 200:
@@ -28,7 +28,7 @@ class PokeApiClient:
 
         return response.json()
 
-    def get_move(self, identifier: int or str):
+    def get_move(self, identifier: int or str): # type: ignore
         url = f"{self.base_url}/move/{identifier}"
         response = requests.get(url)
         if response.status_code != 200:

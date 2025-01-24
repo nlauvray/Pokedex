@@ -3,24 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='pokemon.css') }}">
   <title>{{ pokemon.name }} - Détails</title>
 </head>
 <body>
-  <header class="pokemon-card-header">
-    <nav class="main-nav">
-        <div class="nav-logo">
-            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
-            <h1>{{ pokemon.name }} - Détails</h1>
-        </div>
-        <ul class="nav-menu">
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/types">Types</a></li>
-            <li><a href="/generations">Générations</a></li>
-        </ul>
-    </nav>
-  </header>
+  {% include 'header.html' %}
 
   <main class="pokemon-card-style">
     <div class="pokemon-content pokemon-details-container">

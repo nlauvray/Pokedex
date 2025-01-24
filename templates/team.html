@@ -11,28 +11,62 @@
     <div class="container">
         <h1>{{ team.name }}</h1>
         <h2>Pokémons dans l'équipe :</h2>
-        <ul>
+        <ul id="team-pokemons">
             {% for pokemon in team.pokemons %}
                 <li>{{ pokemon.name }}</li>
             {% endfor %}
         </ul>
-		<button class="btn-blue" onclick="window.location.href='{{ url_for('auth.profile') }}'">Retour au tableau de bord</button>
+        <h2>Ajouter des Pokémons :</h2>
+        <ul>
+			{% for pokemon in all_pokemons %}
+				<li>
+					{{ pokemon.name }}
+					<button onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}')">+</button>
+				</li>
+			{% endfor %}
+        </ul>
+        <button class="btn-blue" onclick="window.location.href='{{ url_for('auth.profile') }}'">Retour au tableau de bord</button>
 		<button type="submit" class="btn-red" onclick="delete_team()">Supprimer l'équipe</button>
-		<script>
+        <script>
+            function add_to_team(pokemon_id, pokemon_name) {
+                fetch('/teams/{{ team.id }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ pokemon_id: pokemon_id }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const teamPokemonsList = document.getElementById('team-pokemons');
+                        const newPokemon = document.createElement('li');
+                        newPokemon.textContent = pokemon_name;
+                        teamPokemonsList.insertBefore(newPokemon, teamPokemonsList.firstChild);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            }
+
 			function delete_team() {
-				if (confirm("Etes-vous sur de vouloir supprimer cette équipe ?")) {
-					fetch('/teams/{{ team.id }}', {
-						method: 'DELETE',
-					})
-					.then(response => {
+				fetch('/teams/{{ team.id }}', {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				})
+				.then(response => {
+					if (response.ok) {
 						window.location.href = "{{ url_for('auth.profile') }}";
-					})
-					.catch(error => {
-						console.error(error);
-					});
-				}
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
 			}
-		</script>
+        </script>
     </div>
 </body>
 </html>

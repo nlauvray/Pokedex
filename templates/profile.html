@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex - Tableau de bord</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    {% include 'header.html' %}
+
     <div class="container">
         <h1>Bienvenue, {{ user.username }} !</h1>
 
@@ -23,7 +26,7 @@
                     <div class="team-card">
                         <h3>{{ team.name }}</h3>
                         <p><strong>Nombre de Pokémon:</strong> {{ team.pokemons|length }}</p>
-                        <a href="{{ url_for('teams.team', team_id=team.id) }}">Voir les détails de l'équipe →</a>
+                        <a id="team" href="{{ url_for('teams.get_team', team_id=team.id) }}">Voir les détails de l'équipe →</a>
                     </div>
                 {% endfor %}
             {% else %}

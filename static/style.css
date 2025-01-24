@@ -63,7 +63,7 @@ ul {
     list-style: none;
     padding: 0;
 }
-
+/*
 li {
     background-color: #f8f8f8;
     border: 2px solid var(--pokemon-blue);
@@ -73,8 +73,8 @@ li {
     font-size: 0.8rem;
     color: var(--pokemon-black);
 }
-
-a {
+*/
+#team {
     color: var(--pokemon-blue);
     text-decoration: none;
     font-size: 0.7rem;
@@ -83,7 +83,7 @@ a {
     transition: color 0.2s;
 }
 
-a:hover {
+#team:hover {
     color: var(--pokemon-red);
 }
 
