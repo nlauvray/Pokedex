@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+    <defs>
+        <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#7FEAD9"/>
+            <stop offset="100%" style="stop-color:#98F5B3"/>
+        </linearGradient>
+    </defs>
+    
+    <rect width="800" height="400" fill="url(#skyGradient)"/>
+    
+    <ellipse cx="200" cy="300" rx="180" ry="40" fill="#8AD5A3" stroke="#7BC494" stroke-width="2"/>
+    <ellipse cx="600" cy="250" rx="180" ry="40" fill="#8AD5A3" stroke="#7BC494" stroke-width="2"/>
+    
+    <path d="M50,290 Q200,270 350,290" fill="none" stroke="#7BC494" stroke-width="1" opacity="0.5"/>
+    <path d="M450,240 Q600,220 750,240" fill="none" stroke="#7BC494" stroke-width="1" opacity="0.5"/>
+    
+    <path d="M150,285 Q200,280 250,285" fill="none" stroke="#7BC494" stroke-width="1" opacity="0.3"/>
+    <path d="M550,235 Q600,230 650,235" fill="none" stroke="#7BC494" stroke-width="1" opacity="0.3"/>
+</svg>

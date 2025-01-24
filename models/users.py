@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     pwd = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     teams = db.relationship('Team', backref='trainer', lazy=True)
-    battles = db.relationship('Battle', backref='trainer', lazy=True)
+    fights = db.relationship('Fight', backref='trainer', lazy=True)
 
     def set_pass(self, pwd):
         self.pwd = generate_password_hash(pwd)

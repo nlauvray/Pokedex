@@ -10,8 +10,6 @@ class Team(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     trainer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     pokemons = db.relationship('TeamPokemon', backref='team', lazy=True, cascade="all, delete-orphan")
-    battles_as_team1 = db.relationship('Battle', foreign_keys='Battle.team1_id', backref='team1', lazy=True)
-    battles_as_team2 = db.relationship('Battle', foreign_keys='Battle.team2_id', backref='team2', lazy=True)
 
     @validates('pokemons')
     def validate_pokemon_count(self, key, pokemon):
@@ -21,3 +19,15 @@ class Team(db.Model):
     
     def get_pokemon_count(self):
         return len(self.pokemons)
+
+class TeamPokemon(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'), nullable=False)  # Correction ici
+    pokemon_id = db.Column(db.Integer, nullable=False)
+    position_in_team = db.Column(db.Integer)  # Position dans l'équipe (1-10)
+
+    @validates('position_in_team')
+    def validate_position(self, key, value):
+        if value < 1 or value > 6:
+            raise ValueError("La position dans l'équipe doit être comprise entre 1 et 6.")
+        return value

@@ -3,8 +3,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from models import db
 from models.users import User
 from models.pokemon import Pokemon
-from models.teams import Team
-from models.team_Pokemon import TeamPokemon
+from models.teams import Team, TeamPokemon
 from systems.auth import AuthSystem
 from infrastructure.pokeapi import PokeApiClient
 
