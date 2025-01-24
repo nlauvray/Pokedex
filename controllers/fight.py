@@ -8,6 +8,10 @@ def get_routes(pokeApi: PokeApiClient, fightSystem: FightSystem):
     pokeApi = PokeApiClient('https://pokeapi.co/api/v2')
     bp = Blueprint('fight', __name__, url_prefix='/fight')
 
+    @bp.route('/wip')
+    def wip():
+        return render_template('fight-wip.html')
+
     @bp.route('/', methods=['GET', 'POST'])
     def index():
         if request.method == 'POST':
