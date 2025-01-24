@@ -1,0 +1,24 @@
+  <main class="pokedex-style">
+    <div class="search-container">
+      <input type="text" name="query" id="pokemon-search" placeholder="Rechercher un Pokémon...">
+    </div>
+
+    <div class="pokemon-content">
+        <h2>Bienvenue sur Pokédex</h2>
+		<span id="loading-icon" class="spinner"></span>
+        <div class="featured-pokemon">
+            <ul>
+                {% for pokemon in all_pokemons %}
+                    <li>{{ pokemon.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+	
+	<div class="pagination">
+		<button class="btn-blue" id="pagination-back" type="button">Precedent</button>
+		<span id="pagination-current"></span>
+		<button class="btn-blue" id="pagination-next" type="button">Suivant</button>
+	</div>
+  </main>
+  <script src="{{ url_for('static', filename='search.js') }}"></script>

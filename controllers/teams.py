@@ -22,7 +22,7 @@ def get_routes():
         
         if request.method == 'POST':
             team_name = request.form['team_name']
-            selected_pokemons = request.form.getlist('pokemons')
+            selected_pokemons = request.form.get('pokemons').split(',')
             
             if len(selected_pokemons) > 5:
                 flash('Vous ne pouvez ajouter que jusqu\'à 5 Pokémon dans une équipe.', 'error')
@@ -50,33 +50,25 @@ def get_routes():
         poke_api_client = PokeApiClient(base_url='https://pokeapi.co/api/v2')
         all_pokemons = Pokemon.list_from_api(poke_api_client)
         team_pokemons = TeamPokemon.query.filter_by(team_id=team_id).all()
-        
-        return render_template('team.html', team=team, all_pokemons=all_pokemons, team_pokemons=team_pokemons)
+        pokemons = [Pokemon.get_from_api(poke_api_client, pokemon.pokemon_id) for pokemon in team_pokemons]
+        return render_template('team.html', team=team, all_pokemons=all_pokemons, team_pokemons=pokemons)
 
-    # Route pour ajouter un Pokémon à une équipe
-    @bp.route('/<int:team_id>/add_pokemon', methods=['POST'])
+    @bp.route('/<int:team_id>/update', methods=['POST'])
     @AuthSystem.login_required
-    def add_pokemon_to_team(team_id):
+    def update_team(team_id):
         team = Team.query.get_or_404(team_id)
-        pokemon_id = request.json.get('pokemon_id')
-        pokemon = Pokemon.query.get(pokemon_id)
-        
-        if pokemon:
-            existing_team_pokemon = TeamPokemon.query.filter_by(team_id=team.id, pokemon_id=pokemon.id).first()
-            if not existing_team_pokemon:
-                if len(team.pokemons) < 5:
-                    team_pokemon = TeamPokemon(team_id=team.id, pokemon_id=pokemon.id)
-                    db.session.add(team_pokemon)
-                    db.session.commit()
-                    
-                    return jsonify({'success': True})
-                
-                else:
-                    return jsonify({'success': False, 'error': 'L\'équipe a déjà 5 Pokémon.'})
-            else:
-                return jsonify({'success': False, 'error': 'Le Pokémon est déjà dans l\'équipe.'})
-        else:
-            return jsonify({'success': False, 'error': 'Pokémon non trouvé'})
+        pokemons = request.json.get('selectedPokemons', [])
+
+        current_pokemons = TeamPokemon.query.filter_by(team_id=team.id).all()
+        for pokemon in current_pokemons:
+            db.session.delete(pokemon)
+
+        for pokemon_id in pokemons:
+            team_pokemon = TeamPokemon(team_id=team.id, pokemon_id=pokemon_id)
+            db.session.add(team_pokemon)
+
+        db.session.commit()
+        return jsonify({'success': True})
 
     # Route pour supprimer une équipe
     @bp.route('/<int:team_id>', methods=['DELETE'])

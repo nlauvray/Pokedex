@@ -6,40 +6,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <title>Pokedex</title>
 </head>
 <body>
   {% include 'header.html' %}
+  {% include 'pokedex.html' %}
 
-  <main class="pokemon-card-style">
-    <div class="search-container">
-  	  <form action="{{ url_for('pokedex.search') }}" method="get">
-        <input type="text" name="query" id="pokemon-search" placeholder="Rechercher un Pokémon...">
-        <button type="submit" class="search-button">
-            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Search" class="search-icon">
-        </button>
-      </form>
-    </div>
-
-    <div class="pokemon-content">
-        <h2>Bienvenue sur Pokédex</h2>
-		<span id="loading-icon" class="spinner"></span>
-        <div class="featured-pokemon">
-            <ul>
-                {% for pokemon in all_pokemons %}
-                    <li>{{ pokemon.name }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-	
-	<div>
-		<button class="btn-blue" id="pagination-back">Precedent</button>
-		<span id="pagination-current"></span>
-		<button class="btn-blue" id="pagination-next">Suivant</button>
-	</div>
-  </main>
-  <script src="{{ url_for('static', filename='search.js') }}"></script>
+  <script>
+	function createPokemonCardHook(id, pokemonCard) {
+		pokemonCard.querySelector('.pokemon-link').href = `/pokemon/${id}`
+	}
+  </script>
 
   <template id="pokemon-card-template">
     <div class="pokemon-card-style">

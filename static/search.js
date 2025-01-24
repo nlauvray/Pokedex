@@ -35,12 +35,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 		loadingIcon.style.display = "none";
 
 		pokemons.forEach((pokemon) => {
-			const pokemonCard = pokemonCardTemplate.content.cloneNode(true);
+			let pokemonCard = pokemonCardTemplate.content.cloneNode(true);
 			pokemonCard.querySelector(".pokemon-name").textContent = pokemon.name;
 			pokemonCard.querySelector(".pokemon-img").src = pokemon.sprites.front_default;
 			pokemonCard.querySelector(".pokemon-img").alt = pokemon.name;
-			pokemonCard.querySelector(".pokemon-link").href = `/pokemon/${pokemon.id}`;
 			resultsContainer.appendChild(pokemonCard);
+			pokemonCard = resultsContainer.lastElementChild;
+			pokemonCard.dataset = {};
+			pokemonCard.dataset.pokemonId = pokemon.id;
+			if (createPokemonCardHook !== undefined) {
+				createPokemonCardHook(pokemon.id, pokemonCard);
+			}
 		});
 
 		page = p;

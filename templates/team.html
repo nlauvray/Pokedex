@@ -13,39 +13,46 @@
 
         <h2>Pokémons dans l'équipe :</h2>
         <div id="selected-pokemons" class="pokemon-cards-container">
-            {% for pokemon in selected_pokemons %}
+            {% for pokemon in team_pokemons %}
                 <div class="pokemon-card-style">
                     <h3 class="pokemon-name">{{ pokemon.name }}</h3>
-                    {% if pokemon.sprites and pokemon.sprites.front_default %}
-                        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="pokemon-img">
-                    {% else %}
-                        <img src="/static/pokeball5.png" alt="{{ pokemon.name }}" class="pokemon-img">
-                    {% endif %}
+					<img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="pokemon-img">
                     <button type="button" class="btn-detail-pokemon" onclick="remove_from_team('{{ pokemon.id }}')">-</button>
                 </div>
             {% endfor %}
         </div>
 
-        <h2>Ajouter des Pokémons :</h2>
-        <div class="pokemon-cards-container">
-            {% for pokemon in pokemons %}
-                <div class="pokemon-card-style">
-                    <h3 class="pokemon-name">{{ pokemon.name }}</h3>
-                    {% if pokemon.sprites and pokemon.sprites.front_default %}
-                        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="pokemon-img">
-                    {% else %}
-                        <img src="/static/pokeball5.png" alt="{{ pokemon.name }}" class="pokemon-img">
-                    {% endif %}
-                    <button type="button" class="btn-detail-pokemon" onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}', '{{ pokemon.sprites.front_default }}')">+</button>
-                </div>
-            {% endfor %}
-        </div>
+		<h2>Ajouter des Pokémons :</h2>
+		{% include 'pokedex.html' %}
 
-        <button type="submit" class="btn-red" onclick="delete_team()">Supprimer l'équipe</button>
+        <button class="btn-red" onclick="delete_team()">Supprimer l'équipe</button>
 		<button class="btn-blue" onclick="save_changes_and_return()">Sauvegarder</button>
 
+  	    <template id="pokemon-card-template">
+			<div class="pokemon-card-style">
+				<h3 class="pokemon-name"></h3>
+				<img class="pokemon-img">
+				<button type="button" class="btn-detail-pokemon">+</button>
+			</div>
+	    </template>
+
 		<script>
-            let selectedPokemons = {{ selected_pokemons|default('[]')|tojson }};
+			function createPokemonCardHook(id, pokemonCard) {
+				const plusButton = pokemonCard.querySelector('.btn-detail-pokemon');
+				plusButton.addEventListener('click', (event) => {
+					const card = event.target.closest('.pokemon-card-style');
+					const pokemonId = card.dataset.pokemonId;
+					const pokemonName = card.querySelector('.pokemon-name').textContent;
+					const pokemonImg = card.querySelector('.pokemon-img').src;
+					add_to_team(pokemonId, pokemonName, pokemonImg);
+				});
+			}
+
+            let selectedPokemons = [
+				{% for pokemon in team_pokemons %}
+					'{{ pokemon.id }}',
+				{% endfor %}
+			];
 
             function add_to_team(pokemon_id, pokemon_name, pokemon_img) {
                 if (selectedPokemons.length >= 5) {
