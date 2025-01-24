@@ -1,8 +1,32 @@
-<html>
-	<head>
-		<title>Pokedex</title>
-	</head>
-	<body>
-		<h1>Hello World!</h1>
-	</body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Pokedex</title>
+</head>
+<body>
+  {% include 'header.html' %}
+  {% include 'pokedex.html' %}
+
+  <script>
+	function createPokemonCardHook(id, pokemonCard) {
+		pokemonCard.querySelector('.pokemon-link').href = `/pokemon/${id}`
+	}
+  </script>
+
+  <template id="pokemon-card-template">
+    <div class="pokemon-card-style">
+      <h3 class="pokemon-name"></h3>
+      <img class="pokemon-img">
+      <a class="pokemon-link">
+        <button class="btn-detail-pokemon">Voir plus</button>
+      </a>
+    </div>
+  </template>
+</body>
 </html>

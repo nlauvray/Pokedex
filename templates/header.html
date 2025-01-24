@@ -1,0 +1,13 @@
+<header class="pokemon-card-header">
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='pokeball5.png') }}" alt="Pokéball" class="pokeball-icon">
+            <a href="/"><h1 id="h1-header">Pokédex</h1></a>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="{{ url_for('auth.profile') }}">Profil</a></li>
+          <li><a href="{{ url_for('fight.index') }}">Combats</a></li>
+          <li><a href="{{ url_for('auth.login') }}">Connexion</a></li>
+        </ul>
+    </nav>
+  </header>

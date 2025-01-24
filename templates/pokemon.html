@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='pokemon.css') }}">
+  <title>{{ pokemon.name }} - Détails</title>
+</head>
+<body>
+  {% include 'header.html' %}
+
+  <main >
+    <div class="pokemon-content pokemon-details-container">
+        <h2>{{ pokemon.name }}</h2>
+        <p>
+          {% for type in pokemon.types %}
+            <span class="type-badge {{ type }}">{{ type.name.capitalize() }}</span>
+          {% endfor %}
+        </p>
+        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" />
+
+
+        <h3>Statistiques</h3>
+        <ul>
+            {% for stat in pokemon.stats %}
+                <li><strong>{{ stat.name.capitalize() }}:</strong> {{ stat.base_stat }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Détails supplémentaires</h3>
+        <ul class="additional-details">
+          <li>
+            <strong>Poids:</strong>
+            <span>{{ pokemon.weight }} hectogrammes</span>
+          </li>
+          <li>
+            <strong>Taille:</strong>
+            <span>{{ pokemon.height }} décimètres</span>
+          </li>
+        </ul>
+    </div>
+  </main>
+</body>
+</html>

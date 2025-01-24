@@ -1,27 +1,36 @@
 import requests
-from typing import Union
-
 class PokeApiClient:
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: int):
         self.base_url = base_url
 
-    def get(self, endpoint):
-        response = requests.get(f"{self.base_url}/{endpoint}")
-        if response.status_code != 200:
-            raise ValueError(f"Erreur lors de la récupération des données: {response.status_code}")
-        return response.json()
-
-    def get_pokemon(self, name):
-        response = requests.get(f"{self.base_url}/pokemon/{name}")
-        if response.status_code == 404:
-            raise ValueError(f"Pokémon non trouvé: {name}")
-        elif response.status_code != 200:
-            raise ValueError(f"Erreur lors de la récupération du Pokémon: {response.status_code}")
-        return response.json()
-
-    def get_move(self, move_name: str):
-        url = f"{self.base_url}/move/{move_name}"
+    def get_pokemons(self, limit: int = 20, offset: int = 0):
+        url = f"{self.base_url}/pokemon?limit={limit}&offset={offset}"
         response = requests.get(url)
-        if response.status_code == 200:
-            return response.json()
-        raise ValueError(f"Erreur lors de la récupération du mouvement: {response.status_code}")
+        if response.status_code != 200:
+            raise ValueError("Une erreur est survenu pendant la récupération des pokemons. Veuillez réessayer plus tard.")
+
+        return response.json()
+
+    def get_pokemon(self, identifier: int or str): # type: ignore
+        url = f"{self.base_url}/pokemon/{identifier}"
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ValueError("Une erreur est survenu pendant la récupération du pokemon. Veuillez reéssayer plus tard.")
+
+        return response.json()
+
+    def get_moves(self, limit: int = 20, offset: int = 0):
+        url = f"{self.base_url}/move"
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ValueError("Une erreur est survenu pendant la récupération des moves. Veuillez reéssayer plus tard.")
+
+        return response.json()
+
+    def get_move(self, identifier: int or str): # type: ignore
+        url = f"{self.base_url}/move/{identifier}"
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ValueError("Une erreur est survenu pendant la récupération du move. Veuillez reéssayer plus tard.")
+
+        return response.json()

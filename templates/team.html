@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'équipe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ team.name }}</h1>
+
+        <h2>Pokémons dans l'équipe :</h2>
+        <div id="selected-pokemons" class="pokemon-cards-container">
+            {% for pokemon in team_pokemons %}
+                <div class="pokemon-card-style">
+                    <h3 class="pokemon-name">{{ pokemon.name }}</h3>
+					<img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="pokemon-img">
+                    <button type="button" class="btn-detail-pokemon" onclick="remove_from_team('{{ pokemon.id }}')">-</button>
+                </div>
+            {% endfor %}
+        </div>
+
+		<h2>Ajouter des Pokémons :</h2>
+		{% include 'pokedex.html' %}
+
+        <button class="btn-red" onclick="delete_team()">Supprimer l'équipe</button>
+		<button class="btn-blue" onclick="save_changes_and_return()">Sauvegarder</button>
+
+  	    <template id="pokemon-card-template">
+			<div class="pokemon-card-style">
+				<h3 class="pokemon-name"></h3>
+				<img class="pokemon-img">
+				<button type="button" class="btn-detail-pokemon">+</button>
+			</div>
+	    </template>
+
+		<script>
+			function createPokemonCardHook(id, pokemonCard) {
+				const plusButton = pokemonCard.querySelector('.btn-detail-pokemon');
+				plusButton.addEventListener('click', (event) => {
+					const card = event.target.closest('.pokemon-card-style');
+					const pokemonId = card.dataset.pokemonId;
+					const pokemonName = card.querySelector('.pokemon-name').textContent;
+					const pokemonImg = card.querySelector('.pokemon-img').src;
+					add_to_team(pokemonId, pokemonName, pokemonImg);
+				});
+			}
+
+            let selectedPokemons = [
+				{% for pokemon in team_pokemons %}
+					'{{ pokemon.id }}',
+				{% endfor %}
+			];
+
+            function add_to_team(pokemon_id, pokemon_name, pokemon_img) {
+                if (selectedPokemons.length >= 5) {
+                    alert("Vous ne pouvez ajouter que 5 Pokémons à l'équipe.");
+                    return;
+                }
+                if (!selectedPokemons.includes(pokemon_id)) {
+                    selectedPokemons.push(pokemon_id);
+                    const selectedPokemonsList = document.getElementById('selected-pokemons');
+                    const newPokemon = document.createElement('div');
+                    newPokemon.className = 'pokemon-card-style';
+                    newPokemon.innerHTML = `
+                        <h3 class="pokemon-name">${pokemon_name}</h3>
+                        <img src="${pokemon_img}" alt="${pokemon_name}" class="pokemon-img">
+                        <button type="button" class="btn-detail-pokemon" onclick="remove_from_team('${pokemon_id}')">-</button>
+                    `;
+                    selectedPokemonsList.appendChild(newPokemon);
+                }
+            }
+
+            function remove_from_team(pokemon_id) {
+                selectedPokemons = selectedPokemons.filter(id => id !== pokemon_id);
+                const selectedPokemonsList = document.getElementById('selected-pokemons');
+                const pokemonCards = selectedPokemonsList.getElementsByClassName('pokemon-card-style');
+                for (let card of pokemonCards) {
+                    if (card.querySelector('button').onclick.toString().includes(pokemon_id)) {
+                        selectedPokemonsList.removeChild(card);
+                        break;
+                    }
+                }
+            }
+            
+            function delete_team() {
+                if (confirm("Etes-vous sur de vouloir supprimer cette équipe ?")) {
+                    fetch('/teams/{{ team.id }}', {
+                        method: 'DELETE',
+                    })
+                    .then(response => {
+                        window.location.href = "{{ url_for('auth.profile') }}";
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+            }
+
+            function save_changes_and_return() {
+                const teamId = '{{ team.id }}';
+                fetch(`/teams/${teamId}/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ selectedPokemons: selectedPokemons }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "{{ url_for('auth.profile') }}";
+                    } else {
+                        alert('test erreur.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Erreur lors de la sauvegarde des changements.');
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>
