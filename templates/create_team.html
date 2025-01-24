@@ -14,16 +14,21 @@
             <label for="team_name">Nom de l'équipe:</label>
             <input type="text" id="team_name" name="team_name" required>
             <h2>Vos Pokémons (5 max):</h2>
-            <ul id="selected-pokemons"></ul>
+            <div id="selected-pokemons" class="pokemon-cards-container"></div>
             <h2>Ajouter des Pokémons :</h2>
-            <ul>
+            <div class="pokemon-cards-container">
                 {% for pokemon in pokemons %}
-                    <li>
-                        {{ pokemon.name }}
-                        <button type="button" onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}')">+</button>
-                    </li>
+                    <div class="pokemon-card-style">
+                        <h3 class="pokemon-name">{{ pokemon.name }}</h3>
+                        {% if pokemon.sprites and pokemon.sprites.front_default %}
+                            <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="pokemon-img">
+                        {% else %}
+                            <img src="/static/pokeball5.png" alt="{{ pokemon.name }}" class="pokemon-img">
+                        {% endif %}
+                        <button type="button" class="btn-detail-pokemon" onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}')">+</button>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
             <button type="submit" class="btn-blue">Créer l'équipe</button>
         </form>
         <button class="btn-blue" onclick="window.location.href='{{ url_for('auth.profile') }}'">Retour au tableau de bord</button>
@@ -38,9 +43,26 @@
                 if (!selectedPokemons.includes(pokemon_id)) {
                     selectedPokemons.push(pokemon_id);
                     const selectedPokemonsList = document.getElementById('selected-pokemons');
-                    const newPokemon = document.createElement('li');
-                    newPokemon.textContent = pokemon_name;
+                    const newPokemon = document.createElement('div');
+                    newPokemon.className = 'pokemon-card-style';
+                    newPokemon.innerHTML = `
+                        <h3 class="pokemon-name">${pokemon_name}</h3>
+                        <img src="/static/pokeball5.png" alt="${pokemon_name}" class="pokemon-img">
+                        <button type="button" class="btn-detail-pokemon" onclick="remove_from_team('${pokemon_id}')">-</button>
+                    `;
                     selectedPokemonsList.appendChild(newPokemon);
+                }
+            }
+
+            function remove_from_team(pokemon_id) {
+                selectedPokemons = selectedPokemons.filter(id => id !== pokemon_id);
+                const selectedPokemonsList = document.getElementById('selected-pokemons');
+                const pokemonCards = selectedPokemonsList.getElementsByClassName('pokemon-card-style');
+                for (let card of pokemonCards) {
+                    if (card.querySelector('button').onclick.toString().includes(pokemon_id)) {
+                        selectedPokemonsList.removeChild(card);
+                        break;
+                    }
                 }
             }
 

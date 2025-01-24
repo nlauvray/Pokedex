@@ -351,6 +351,40 @@ input:focus {
     color: #666;
 }
 
+.pokemon-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pokemon-card-style {
+    background-color: var(--pokemon-white);
+    border: 2px solid var(--pokemon-blue);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    width: 150px;
+}
+
+.pokemon-card-style img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.pokemon-card-style .btn-detail-pokemon {
+    background-color: var(--pokemon-red);
+    color: var(--pokemon-white);
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.pokemon-card-style .btn-detail-pokemon:hover {
+    background-color: var(--pokemon-blue);
+}
+
 @keyframes slideIn {
     from {
         transform: translateX(100%);
