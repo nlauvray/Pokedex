@@ -10,11 +10,24 @@
 <body>
     <div class="container">
         <h1>Créer une nouvelle équipe</h1>
+
         <form method="POST" id="create-team-form">
             <label for="team_name">Nom de l'équipe:</label>
             <input type="text" id="team_name" name="team_name" required>
             <h2>Vos Pokémons (5 max):</h2>
-            <div id="selected-pokemons" class="pokemon-cards-container"></div>
+            <div id="selected-pokemons" class="pokemon-cards-container">
+                {% for pokemon in selected_pokemons %}
+                    <div class="pokemon-card-style">
+                        <h3 class="pokemon-name">{{ pokemon.name }}</h3>
+                        {% if pokemon.sprites and pokemon.sprites.front_default %}
+                            <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="pokemon-img">
+                        {% else %}
+                            <img src="/static/pokeball5.png" alt="{{ pokemon.name }}" class="pokemon-img">
+                        {% endif %}
+                        <button type="button" class="btn-detail-pokemon" onclick="remove_from_team('{{ pokemon.id }}')">-</button>
+                    </div>
+                {% endfor %}
+            </div>
             <h2>Ajouter des Pokémons :</h2>
             <div class="pokemon-cards-container">
                 {% for pokemon in pokemons %}
@@ -25,17 +38,21 @@
                         {% else %}
                             <img src="/static/pokeball5.png" alt="{{ pokemon.name }}" class="pokemon-img">
                         {% endif %}
-                        <button type="button" class="btn-detail-pokemon" onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}')">+</button>
+                        <button type="button" class="btn-detail-pokemon" onclick="add_to_team('{{ pokemon.id }}', '{{ pokemon.name }}', '{{ pokemon.sprites.front_default }}')">+</button>
                     </div>
                 {% endfor %}
             </div>
+
             <button type="submit" class="btn-blue">Créer l'équipe</button>
+
         </form>
+
         <button class="btn-blue" onclick="window.location.href='{{ url_for('auth.profile') }}'">Retour au tableau de bord</button>
+
         <script>
             let selectedPokemons = [];
 
-            function add_to_team(pokemon_id, pokemon_name) {
+            function add_to_team(pokemon_id, pokemon_name, pokemon_img) {
                 if (selectedPokemons.length >= 5) {
                     alert("Vous ne pouvez ajouter que 5 Pokémons à l'équipe.");
                     return;
@@ -47,7 +64,7 @@
                     newPokemon.className = 'pokemon-card-style';
                     newPokemon.innerHTML = `
                         <h3 class="pokemon-name">${pokemon_name}</h3>
-                        <img src="/static/pokeball5.png" alt="${pokemon_name}" class="pokemon-img">
+                        <img src="${pokemon_img}" alt="${pokemon_name}" class="pokemon-img">
                         <button type="button" class="btn-detail-pokemon" onclick="remove_from_team('${pokemon_id}')">-</button>
                     `;
                     selectedPokemonsList.appendChild(newPokemon);

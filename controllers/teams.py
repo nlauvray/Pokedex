@@ -2,8 +2,9 @@ import requests
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for, jsonify
 from models import db
 from models.users import User
-from models.model_pokemon import Pokemon
+from models.pokemon import Pokemon
 from models.teams import Team
+from models.team_Pokemon import TeamPokemon
 from systems.auth import AuthSystem
 from infrastructure.pokeapi import PokeApiClient
 
@@ -17,7 +18,7 @@ def get_routes():
         user = User.query.get(session['user_id'])
         
         poke_api_client = PokeApiClient(base_url='https://pokeapi.co/api/v2')
-        pokemons = poke_api_client.get_pokemons(limit=100)['results']
+        pokemons = Pokemon.list_from_api(poke_api_client)
         
         if request.method == 'POST':
             team_name = request.form['team_name']
@@ -29,13 +30,11 @@ def get_routes():
             
             new_team = Team(name=team_name, trainer_id=user.id)
             db.session.add(new_team)
+            db.session.commit()
             
             for pokemon_id in selected_pokemons:
-                pokemon = Pokemon.query.get(pokemon_id)
-                if pokemon:
-                    new_team.pokemons.append(pokemon)
-                else:
-                    flash(f'Pokémon avec ID {pokemon_id} non trouvé.', 'error')
+                team_pokemon = TeamPokemon(team_id=new_team.id, pokemon_id=pokemon_id)
+                db.session.add(team_pokemon)
                 
             db.session.commit()
             
@@ -48,8 +47,9 @@ def get_routes():
     @AuthSystem.login_required
     def get_team(team_id):
         team = Team.query.get_or_404(team_id)
-        all_pokemons = Pokemon.query.all()
-        team_pokemons = team.pokemons
+        poke_api_client = PokeApiClient(base_url='https://pokeapi.co/api/v2')
+        all_pokemons = Pokemon.list_from_api(poke_api_client)
+        team_pokemons = TeamPokemon.query.filter_by(team_id=team_id).all()
         
         return render_template('team.html', team=team, all_pokemons=all_pokemons, team_pokemons=team_pokemons)
 
@@ -62,9 +62,11 @@ def get_routes():
         pokemon = Pokemon.query.get(pokemon_id)
         
         if pokemon:
-            if pokemon not in team.pokemons:
+            existing_team_pokemon = TeamPokemon.query.filter_by(team_id=team.id, pokemon_id=pokemon.id).first()
+            if not existing_team_pokemon:
                 if len(team.pokemons) < 5:
-                    team.pokemons.append(pokemon)
+                    team_pokemon = TeamPokemon(team_id=team.id, pokemon_id=pokemon.id)
+                    db.session.add(team_pokemon)
                     db.session.commit()
                     
                     return jsonify({'success': True})

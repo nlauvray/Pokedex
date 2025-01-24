@@ -141,7 +141,7 @@ class Pokemon:
         self.past_types = [PokemonPastType(p) for p in json["past_types"]]
 
     @staticmethod
-    def get_from_api(api_client: PokeApiClient, identifier: int or str):
+    def get_from_api(api_client: PokeApiClient, identifier: int or str): # type: ignore
         json = api_client.get_pokemon(identifier)
         return Pokemon(json)
 
