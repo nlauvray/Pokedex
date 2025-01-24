@@ -17,9 +17,9 @@
             <h1>{{ pokemon.name }}</h1>
         </div>
         <ul class="nav-menu">
-          <li><a href="/profil">Profil</a></li>
-          <li><a href="/combats">Combats</a></li>
-          <li><a href="/login">Connexion</a></li>
+		  <li><a href="{{ url_for('auth.profile') }}">Profil</a></li>
+					{#<!--<li><a href="{{ url_for('fight.index') }}">Combats</a></li>-->#}
+          <li><a href="{{ url_for('auth.login') }}">Connexion</a></li>
       </ul>
     </nav>
   </header>
@@ -32,7 +32,7 @@
             <span class="type-badge {{ type }}">{{ type.name.capitalize() }}</span>
           {% endfor %}
         </p>
-        <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}" />
+        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" />
 
 
         <h3>Statistiques</h3>
@@ -46,11 +46,11 @@
         <ul class="additional-details">
           <li>
             <strong>Poids:</strong>
-            <span>{{ details['weight'] }} hectogrammes</span>
+            <span>{{ pokemon.weight }} hectogrammes</span>
           </li>
           <li>
             <strong>Taille:</strong>
-            <span>{{ details['height'] }} décimètres</span>
+            <span>{{ pokemon.height }} décimètres</span>
           </li>
         </ul>
     </div>
