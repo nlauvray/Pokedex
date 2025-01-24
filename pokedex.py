@@ -9,6 +9,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 import base64
 import os
+import config
 
 from controllers import auth, teams, pokedex, fight
 
@@ -44,4 +45,4 @@ with app.app_context():
     db.create_all() 
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Activation du mode debug pour le développement
+    app.run(host=config.HOST, port=config.PORT, debug=True)  # Activation du mode debug pour le développement
